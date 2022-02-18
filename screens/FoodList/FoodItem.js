@@ -113,6 +113,7 @@ function FoodItem(props) {
             </View>
         </View>
     </TouchableOpacity>
+    
     )
 }
 

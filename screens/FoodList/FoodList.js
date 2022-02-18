@@ -225,7 +225,6 @@ function FoodList(props){
             keyExtractor={eachFood => eachFood.name}
            ></FoodItem>}
            >
-
            </FlatList>}
         </View>
     </View>
