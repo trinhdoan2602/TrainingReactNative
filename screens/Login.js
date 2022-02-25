@@ -9,6 +9,16 @@ import {
     Keyboard,
     KeyboardAvoidingView,
 } from 'react-native';
+import {
+    auth,
+    onAuthStateChanged,
+    firebaseDatabaseRef,
+    firebaseSet,
+    firebaseDatabase,
+    createUserWithEmailAndPassword,
+    sendEmailVerification,
+    signInWithEmailAndPassword,
+} from '../firebase/firebase'
 import {images, colors, icons, fontSize} from '../constants'
 import Icon from 'react-native-vector-icons/FontAwesome5'
 import {isValidEmail, isValidPassword} from '../utilities/Validations'
@@ -20,8 +30,8 @@ function Login(props) {
     const [errorEmail, setErrorEmail] = useState('')
     const [errorPassword, setErrorPassword] = useState('')
     //states to store email/password
-    const [email, setEmail] = useState('')
-    const [password, setPassword] = useState('')
+    const [email, setEmail] = useState('trinh@gmail.com')
+    const [password, setPassword] = useState('123456Abc')
     const isValidationOK = () => email.length > 0
     && password.length > 0
     && isValidEmail(email) == true
@@ -38,6 +48,10 @@ function Login(props) {
             setKeyboardIsShow(false)
         })
     })
+    //navigation
+    const {navigation, route} = props
+    //function of navigate to/back
+    const {navigate, goBack} = navigation
     return <KeyboardAvoidingView
     behavior={Platform.OS === 'ios' ? "padding" : "height" }
     style={{
@@ -89,7 +103,9 @@ function Login(props) {
                 style={{
                     color: 'black',
                 }}
+                keyboardType='email'
                 placeholder='example@gmail.com'
+                value = {email}
                 placeholderTextColor={colors.placeholder}
                 ></TextInput>
                 <Text style={{
@@ -116,6 +132,7 @@ function Login(props) {
                     }}
                     secureTextEntry = {true}
                     placeholder='Enter your password'
+                    value={password}
                     placeholderTextColor={colors.placeholder}
                     ></TextInput>
                     <Text style={{
@@ -132,7 +149,14 @@ function Login(props) {
             <TouchableOpacity
             disabled = {isValidationOK() == false}
             onPress={() => {
-            alert(`Email = ${email}, password = ${password}`)
+            // alert(`Email = ${email}, password = ${password}`)
+            signInWithEmailAndPassword(auth, email, password)
+                .then((userCredential) => {
+                    const user = userCredential.user
+                    navigate('UITab')
+                }).catch((error) => {
+                    alert(`Cannot signin, error: ${error.message}`)
+                })
             }}
             style={{
                 backgroundColor: isValidationOK() == true 
@@ -151,7 +175,8 @@ function Login(props) {
             </TouchableOpacity>
             <TouchableOpacity
             onPress={() => {
-                alert('Press register')
+                // alert('Press register')
+                navigate('Register')
             }}
             style={{
                 padding: 5,

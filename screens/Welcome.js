@@ -13,6 +13,14 @@ import {sum2Number, subtract2Number, PI} from '../utilities/Calculation'
 import {icons, images, colors, fontSize} from '../constants'
 import {UIButton} from '../components'
 import Icon from 'react-native-vector-icons/FontAwesome5'
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import {
+    auth,
+    onAuthStateChanged,
+    firebaseDatabaseRef,
+    firebaseSet,
+    firebaseDatabase,
+} from '../firebase/firebase'
 //read object, variable, function from other modules
 function Welcome(props) {
     //state => when a state is changed => UI is reload
@@ -30,6 +38,31 @@ function Welcome(props) {
             isSelected: false,
         },
     ])
+    //navigation
+    const {navigation, route} = props
+    //function of navigate to/back
+    const {navigate, goBack} = navigation
+    useEffect(() => {
+        onAuthStateChanged(auth, (responseUser) => {
+            if(responseUser){
+                //sign in
+                //save data to Firebase
+                let user = {
+                    userId : responseUser.uid,
+                    email: responseUser.email,
+                    emailVerified: responseUser.emailVerified,
+                    accessToken: responseUser.accessToken
+                }
+                firebaseSet(firebaseDatabaseRef(
+                    firebaseDatabase,
+                    `users/${responseUser.uid}`
+                ), user)
+                //save user to local storage
+                AsyncStorage.setItem("user", JSON.stringify(user))
+                navigate('UITab')
+            }
+        })
+    })
     return <View style={{
         backgroundColor: 'white',
         flex: 100,
@@ -116,7 +149,9 @@ function Welcome(props) {
             flex: 40,
         }}>
             {accountTypes.map(accountType =>
-                <UIButton onPress={() => {
+                <UIButton 
+                key = {accountType.name}
+                onPress={() => {
                     setAccountTypes(accountTypes.map(eachAccountType => {
                         return {
                             ...eachAccountType,
@@ -131,7 +166,12 @@ function Welcome(props) {
         <View style={{
             flex: 20,
         }}>
-        <UIButton title={'Login'.toUpperCase()}></UIButton>
+        <UIButton 
+        onPress={() => {
+            navigate('Login')
+        }}
+        title={'Login'.toUpperCase()
+        }></UIButton>
         <Text style={{
                 color: 'white',
                 fontSize: fontSize.h6,
@@ -139,7 +179,8 @@ function Welcome(props) {
             }}>Want to register new Account?</Text>
         <TouchableOpacity
         onPress={() => {
-            alert('Press Register')
+            // alert('Press Register')
+            navigate('Register')
         }}
         style={{
             padding: 5,

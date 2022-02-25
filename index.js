@@ -1,11 +1,15 @@
 /**
 javascript
  */
-
+/*
+yarn add axios
+*/
 import React from 'react';
 import {AppRegistry, Text} from 'react-native';
 import {name as appName} from './app.json';
-import {Welcome, Login, Register, FoodList} from './screens';
+// import {Welcome, Login, Register, FoodList, ProductGridView, Settings} from './screens';
+// import UITab from  './navigation/UITab'
+import App from './navigation/App'
 
 let fakedProducts = [
     {
@@ -36,4 +40,4 @@ let fakedProducts = [
 //                  }}
 //                  products = {fakedProducts}
 //                  />);
-AppRegistry.registerComponent(appName, () => () => <FoodList />);
+AppRegistry.registerComponent(appName, () => () => <App />);

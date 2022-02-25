@@ -3,17 +3,12 @@ import {
     Text,
     View,
     Image,
-    ImageBackground,
     TouchableOpacity,
     TextInput,
-    Keyboard,
-    KeyboardAvoidingView,
-    ScrollView,
     FlatList,
 } from 'react-native';
 import {images, colors, icons, fontSize} from '../../constants'
 import Icon from 'react-native-vector-icons/FontAwesome5'
-import {isValidEmail, isValidPassword} from '../../utilities/Validations'
 import FoodItem from './FoodItem';
 
 /*

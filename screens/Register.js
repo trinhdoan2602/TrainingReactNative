@@ -12,6 +12,16 @@ import {
 import {images, colors, icons, fontSize} from '../constants'
 import Icon from 'react-native-vector-icons/FontAwesome5'
 import {isValidEmail, isValidPassword} from '../utilities/Validations'
+import {
+    auth,
+    onAuthStateChanged,
+    firebaseDatabaseRef,
+    firebaseSet,
+    firebaseDatabase,
+    createUserWithEmailAndPassword,
+    sendEmailVerification,
+} from '../firebase/firebase'
+
 
 function Register(props) {
     const [keyboardIsShow, setKeyboardIsShow] = useState(false)
@@ -19,12 +29,14 @@ function Register(props) {
     const [errorEmail, setErrorEmail] = useState('')
     const [errorPassword, setErrorPassword] = useState('')
     //states to store email/password
-    const [email, setEmail] = useState('')
-    const [password, setPassword] = useState('')
+    const [email, setEmail] = useState('trinh@gmail.com')
+    const [password, setPassword] = useState('123456Abc')
+    const [retypePassword, setRetypePassword] = useState('123456Abc')
     const isValidationOK = () => email.length > 0
-    && password.length > 0
-    && isValidEmail(email) == true
-    && isValidPassword(password) == true
+                            && password.length > 0
+                            && isValidEmail(email) == true
+                            && isValidPassword(password) == true
+                            && password == retypePassword
 
     useEffect(() => {
         //componentDidMount
@@ -37,6 +49,10 @@ function Register(props) {
             setKeyboardIsShow(false)
         })
     })
+    //navigation
+    const {navigation, route} = props
+    //function of navigate to/back
+    const {navigate, goBack} = navigation
     return <KeyboardAvoidingView
     behavior={Platform.OS === 'ios' ? "padding" : "height" }
     style={{
@@ -93,6 +109,7 @@ function Register(props) {
                     color: 'black',
                 }}
                 placeholder='example@gmail.com'
+                value={email}
                 placeholderTextColor={colors.placeholder}
                 ></TextInput>
                 <Text style={{
@@ -119,6 +136,7 @@ function Register(props) {
                     }}
                     secureTextEntry = {true}
                     placeholder='Enter your password'
+                    value={password}
                     placeholderTextColor={colors.placeholder}
                     ></TextInput>
                     <Text style={{
@@ -138,13 +156,14 @@ function Register(props) {
                     <TextInput
                     onChangeText={(text) => {
                         setErrorPassword(isValidPassword(text) == true ? '' : 'Password must be at least 3 characters')
-                        setPassword(text);
+                        setRetypePassword(text)
                     }}
                     style={{
                         color: 'black',
                     }}
                     secureTextEntry = {true}
                     placeholder='Re-Enter your password'
+                    value={retypePassword}
                     placeholderTextColor={colors.placeholder}
                     ></TextInput>
                     <Text style={{
@@ -157,7 +176,17 @@ function Register(props) {
             <TouchableOpacity
             disabled = {isValidationOK() == false}
             onPress={() => {
-            alert(`Email = ${email}, password = ${password}`)
+            // alert(`Email = ${email}, password = ${password}`)
+                createUserWithEmailAndPassword(auth, email, password)
+                .then((userCredential) => {
+                    const user = userCredential.user
+                    sendEmailVerification(user).then(() => {
+                        console.log('Email verification sent')
+                    })
+                    navigate('UITab')
+                }).catch((error) => {
+                    alert(`Cannot signin, error: ${error.message}`)
+                })
             }}
             style={{
                 backgroundColor: isValidationOK() == true 
