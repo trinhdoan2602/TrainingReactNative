@@ -10,7 +10,7 @@ import {
 
 //component = function
 import Icon from 'react-native-vector-icons/FontAwesome5'
-import { colors } from '../../constants';
+import {images, colors, icons, fontSize} from '../../constants'
 import { UIHeader } from '../../components';
 import ChatItem from './ChatItem';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -73,7 +73,8 @@ function Chat(props) {
         leftIconName={"arrow-left"}
         rightIconName={"search"}
         onPressLeftIcon={() => {
-            alert('press left icon')
+            // alert('press left icon')
+            goBack()
         }}
         onPressRightIcon={() => {
             alert('press right icon')

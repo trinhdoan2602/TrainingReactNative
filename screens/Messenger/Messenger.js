@@ -12,7 +12,7 @@ import {
 
 //component = function
 import Icon from 'react-native-vector-icons/FontAwesome5'
-import { colors } from '../../constants';
+import {images, colors, icons, fontSize} from '../../constants'
 import { UIHeader } from '../../components';
 import MessengerItem from './MessengerItem';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -22,6 +22,7 @@ import {
     firebaseDatabaseRef,
     firebaseSet,
     firebaseDatabase,
+    onValue,
 } from '../../firebase/firebase'
 
 function Messenger(props) {
@@ -34,43 +35,43 @@ function Messenger(props) {
             messenger: "hello",
             timestamp: 1641654238000,
         },
-        {
-            url: 'https://www.randomaddressgenerator.com/media/face/male90.jpg',
-            showUrl: false,
-            isSenders: true,
-            messenger: "what your name? aasdasdasdddddddddd asddddddddd as dddddddddaqsd  asdasdasdasd asdwqef asdasd asd asdasdaaaa",
-            timestamp: 1641654298000,
-        },
-        {
-            url: 'https://www.randomaddressgenerator.com/media/face/male90.jpg',
-            showUrl: false,
-            isSenders: true,
-            messenger: "Do you see me?",
-            timestamp: 1641654538000,
-        },
-        {
-            url: 'https://www.randomaddressgenerator.com/media/face/male90.jpg',
-            showUrl: true,
-            isSenders: false,
-            messenger: "I kiss you?",
-            timestamp: 1641654598000,
-        },
-        {
-            url: 'https://www.randomaddressgenerator.com/media/face/male90.jpg',
-            showUrl: false,
-            isSenders: false,
-            messenger: "I am fine?",
-            timestamp: 1641654618000,
-        },
-        {
-            url: 'https://www.randomaddressgenerator.com/media/face/male90.jpg',
-            showUrl: true,
-            isSenders: true,
-            messenger: "Let's go out?",
-            timestamp: 1641654628000,
-        },
         
     ])
+    useEffect(() => {
+        onValue(firebaseDatabaseRef(firebaseDatabase, 'chats'), async (snapshot) => {
+            if(snapshot.exists()) {
+                let snapshotObject = snapshot.val()
+                let stringUser = await AsyncStorage.getItem("user")
+                let myUserId = JSON.parse(stringUser).userId
+                let updatedChatHistory = Object.keys(snapshotObject)
+                .filter(item => item.includes(myUserId))
+                .map(eachKey => {
+                    let eachObject = snapshotObject[eachKey]
+                    return {
+                        ...eachObject,
+                        isSender: eachKey.split('-')[0] == myUserId,
+                        url: 'https://www.randomaddressgenerator.com/media/face/male90.jpg'
+                    }
+                })
+                .sort((item1, item2) => item1.timestamp - item2.timestamp)
+                for(let i = 0; i < updatedChatHistory.length; i++) {
+                    let item = updatedChatHistory[i]
+                    // if(i == 0) {
+                    //     item.showUrl == true
+                    // } else {
+                    //     if(isSender != updatedChatHistory[i].isSender) {
+                    //         item.showUrl = false
+                    //     }
+                    // }
+                    item.showUrl = (i == 0) ? true : item.isSender != updatedChatHistory[i].isSender
+                }
+                setChatHistory(updatedChatHistory)
+                
+            } else {
+                console.log('No data available')
+            }
+        })
+    }, [])
     const {url, name, userId} = props.route.params.user
     const {navigate, goBack} = props.navigation
     return <View style={{
