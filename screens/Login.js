@@ -11,12 +11,6 @@ import {
 } from 'react-native';
 import {
     auth,
-    onAuthStateChanged,
-    firebaseDatabaseRef,
-    firebaseSet,
-    firebaseDatabase,
-    createUserWithEmailAndPassword,
-    sendEmailVerification,
     signInWithEmailAndPassword,
 } from '../firebase/firebase'
 import {images, colors, icons, fontSize} from '../constants'

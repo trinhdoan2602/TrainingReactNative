@@ -3,11 +3,7 @@ import {
     Text,
     View,
     Image,
-    ImageBackground,
     TouchableOpacity,
-    TextInput,
-    Keyboard,
-    KeyboardAvoidingView,
 } from 'react-native';
 import {images, colors, icons, fontSize} from '../../constants'
 import Icon from 'react-native-vector-icons/FontAwesome5'
@@ -18,7 +14,6 @@ function ChatItem(props) {
             url, 
             message, 
             numberOfUnreadMessages,
-            userId,
         } = props.user //dung destructuring an object
    
     const {onPress} = props

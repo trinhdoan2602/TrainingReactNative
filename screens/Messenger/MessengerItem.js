@@ -3,12 +3,7 @@ import {
     Text,
     View,
     Image,
-    ImageBackground,
     TouchableOpacity,
-    TextInput,
-    Keyboard,
-    KeyboardAvoidingView,
-    Dimensions,
 } from 'react-native';
 import {images, colors, icons, fontSize} from '../../constants'
 import Icon from 'react-native-vector-icons/FontAwesome5'

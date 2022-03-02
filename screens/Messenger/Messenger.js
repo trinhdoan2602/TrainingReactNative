@@ -86,7 +86,7 @@ function Messenger(props) {
             goBack()
         }}
         onPressRightIcon={() => {
-            alert('press right icon')
+            alert('press 3dot icon')
         }}
     
      />

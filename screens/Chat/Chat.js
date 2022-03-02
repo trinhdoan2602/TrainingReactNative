@@ -15,20 +15,11 @@ import { UIHeader } from '../../components';
 import ChatItem from './ChatItem';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {
-    auth,
-    onAuthStateChanged,
     firebaseDatabaseRef,
-    firebaseSet,
     firebaseDatabase,
-    createUserWithEmailAndPassword,
-    sendEmailVerification,
-    child,
-    get,
     onValue,
 } from '../../firebase/firebase'
-
 // import { get } from 'react-native/Libraries/Utilities/PixelRatio';
-
 function Chat(props) {
     const [users, setUsers] = useState([
         // {

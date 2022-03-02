@@ -14,10 +14,6 @@ import Icon from 'react-native-vector-icons/FontAwesome5'
 import {isValidEmail, isValidPassword} from '../utilities/Validations'
 import {
     auth,
-    onAuthStateChanged,
-    firebaseDatabaseRef,
-    firebaseSet,
-    firebaseDatabase,
     createUserWithEmailAndPassword,
     sendEmailVerification,
 } from '../firebase/firebase'

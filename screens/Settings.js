@@ -2,10 +2,7 @@ import React, {useState, useEffect} from 'react';
 import {
     Text,
     View,
-    Image,
     TouchableOpacity,
-    TextInput,
-    FlatList,
     ScrollView,
     Switch,
 } from 'react-native';
